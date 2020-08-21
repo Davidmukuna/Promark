@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Manipulation des formulaires</title>
+    <style>
+h1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: oblique;
+    color: blueviolet;
+}
+    </style>
+</head>
+<script>
+    alert("Bienvenue dans notre page");
+</script>
+<body>
+    <center>
+    <h1>Business and marketing</h1>
+</center>
+    <form>
+        <h2><u>Formulaire d'inscription</u></h2>
+        <p>
+            <label for="pseudo">Nom d'utilisateur</label> :
+            <input type="text" name="pseudo" id="pseudo" required placeholder="Entrez votre nom d'utilisateur">
+            <span id="aidePseudo"></span>
+        </p>
+        <p>
+            <label for="mdp">Mot de passe</label> :
+            <input type="password" name="mdp" id="mdp" required placeholder="Entrez votre mot de passe">
+            <span id="aideMdp"></span>
+        </p>
+        <p>
+            <label for="courriel">Email</label> :
+            <input type="email" name="courriel" id="courriel" required placeholder="utilisateur@domaine.fr">
+            <span id="aideCourriel"></span>
+        </p>
+        <p>
+            <input type="checkbox" name="confirmation" id="confirmation">
+            <label for="confirmation">M'envoyer un mail de confirmation</label>
+        </p>
+        <p>
+            <input type="radio" name="abonnement" id="abonewspromo" value="abonewspromo">
+            <label for="abonewspromo">M'abonner à la newsletter et aux promotions</label>
+            <br>
+            <input type="radio" name="abonnement" id="abonews" value="abonews">
+            <label for="abonews">M'abonner uniquement à la newsletter</label>
+            <br>
+            <input type="radio" name="abonnement" id="aborien" value="aborien" checked>
+            <label for="aborien">Ne pas m'abonner</label>
+            <br>
+        </p>
+        <p>
+            <label for="nationalite">Nationalité :</label>
+            <select name="nationalite" id="nationalite">
+                <option value="CD" selected>Congolaise</option>
+                <option value="US">Americaine</option>
+                <option value="FR">Francaise</option>
+                <option value="CH">Chinoise</option>
+                <option value="XX">Autre</option>
+            </select>
+        </p>
+
+        <input type="submit" value="Envoyer" onclick="alert('Votre requete à été envoyée')">
+        <input type="reset" value="Annuler">
+    </form>
+
+    <script> 
+    
+    var pseudoElt = document.getElementById("pseudo");
+pseudoElt.value = "";
+
+// Affichage d'un message contextuel pour la saisie du pseudo
+pseudoElt.addEventListener("focus", function () {
+    document.getElementById("aidePseudo").textContent = "";
+});
+// Suppression du message contextuel pour la saisie du pseudo
+pseudoElt.addEventListener("blur", function (e) {
+    document.getElementById("aidePseudo").textContent = "";
+});
+
+// Focus sur la zone de saisie du pseudo
+pseudoElt.focus();
+
+
+// Affichage de la demande de confirmation d'inscription
+document.getElementById("confirmation").addEventListener("change", function (e) {
+    console.log("Demande de confirmation : " + e.target.checked)
+});
+
+// Affichage du type d'abonnement choisi
+var aboElts = document.getElementsByName("abonnement");
+for (var i = 0; i < aboElts.length; i++) {
+    aboElts[i].addEventListener("change", function (e) {
+        console.log("Formule d'abonnement choisie : " + e.target.value);
+    });
+}
+
+// Affichage du code de nationalité choisi
+document.getElementById("nationalite").addEventListener("change", function (e) {
+    console.log("Code de nationalité : " + e.target.value);
+});
+
+var form = document.querySelector("form");
+console.log("Nombre de champs de saisie : " + form.elements.length); // Affiche 10
+console.log(form.elements[0].name); // Affiche "pseudo"
+console.log(form.elements.mdp.type); // Affiche "password"
+
+// Affiche de toutes les données saisies ou choisies
+form.addEventListener("submit", function (e) {
+    var pseudo = form.elements.pseudo.value;
+    var mdp = form.elements.mdp.value;
+    var courriel = form.elements.courriel.value;
+    console.log("Vous avez choisi le pseudo " + pseudo + ", le mot de passe " +
+        mdp + " et le courriel " + courriel);
+    if (form.elements.confirmation.checked) {
+        console.log("Vous avez demandé une confirmation d'inscription par courriel");
+    } else {
+        console.log("Vous n'avez pas demandé de confirmation d'inscription par courriel");
+    }
+    switch (form.elements.abonnement.value) {
+    case "abonewspromo":
+        console.log("Vous êtes abonné(e) à la newsletter et aux promotions");
+        break;
+    case "abonews":
+        console.log("Vous êtes abonné(e) à la newsletter");
+        break;
+    case "aborien":
+        console.log("Vous n'êtes abonné(e) à rien");
+        break;
+    default:
+        console.log("Erreur : Vous n'avez pas choisi d'abonnement");
+    }
+    switch (form.elements.nationalite.value) {
+    case "FR":
+        console.log("Vous êtes congolais(e)");
+        break;
+    case "BE":
+        console.log("Vous êtes americaine(e)");
+        break;
+    case "SUI":
+        console.log("Vous êtes francais(e)");
+        break;
+        console.log("Vous êtes chinois(e)");
+        break;
+    default:
+        console.log("Erreur : Nous n'avions pas reconnu votre nationalité");
+    }
+    e.preventDefault(); // Annulation de l'envoi des données
+});
+
+// Vérification de la longueur du mot de passe saisi
+document.getElementById("mdp").addEventListener("input", function (e) {
+    var mdp = e.target.value; // Valeur saisie dans le champ mdp
+    var longueurMdp = "faible";
+    var couleurMsg = "red"; // Longueur faible => couleur rouge
+    if (mdp.length >= 8) {
+        longueurMdp = "suffisante";
+        couleurMsg = "green"; // Longueur suffisante => couleur verte
+    } else if (mdp.length >= 4) {
+        longueurMdp = "moyenne";
+        couleurMsg = "orange"; // Longueur moyenne => couleur orange
+    }
+    var aideMdpElt = document.getElementById("aideMdp");
+    aideMdpElt.textContent = "Longueur : " + longueurMdp; // Texte de l'aide
+    aideMdpElt.style.color = couleurMsg; // Couleur du texte de l'aide
+});
+
+// Contrôle du courriel en fin de saisie
+document.getElementById("courriel").addEventListener("blur", function (e) {
+    var validiteCourriel = "";
+    if (e.target.value.indexOf("@") === -1) {
+        // Le courriel saisi ne contient pas le caractère @
+        validiteCourriel = "Adresse invalide";
+    }
+    document.getElementById("aideCourriel").textContent = validiteCourriel;
+});
+
+var regex = /@/; // La chaîne doit contenir le caractère @
+console.log(regex.test("")); // Affiche false
+console.log(regex.test("@")); // Affiche true
+console.log(regex.test("sophie&mail.fr")); // Affiche false
+console.log(regex.test("sophie@mail.fr")); // Affiche true
+
+// Contrôle du courriel en fin de saisie
+document.getElementById("courriel").addEventListener("blur", function (e) {
+    // Correspond à une chaîne de la forme xxx@yyy.zzz
+    var regexCourriel = /.+@.+\..+/;
+    var validiteCourriel = "";
+    if (!regexCourriel.test(e.target.value)) {
+        validiteCourriel = "Adresse invalide";
+    }
+    document.getElementById("aideCourriel").textContent = validiteCourriel;
+});
+    </script>
+</body>
+
+</html>
